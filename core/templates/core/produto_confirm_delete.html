@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Confirmar Exclusão do Produto</h1>
+  <p>Tem certeza de que deseja excluir o produto <strong>{{ produto.nome }}</strong>?</p>
+  <p>Esta ação não pode ser desfeita.</p>
+  
+  <form method="post" style="margin-top: 20px;">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Sim, excluir</button>
+    <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancelar</a>
+  </form>
+{% endblock %}

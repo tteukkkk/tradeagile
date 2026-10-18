@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Análise Gráfica: Valor em Estoque por Categoria</h2>
+
+    <form method="GET" style="background-color: #e9ecef; padding: 15px; border-radius: 5px; margin-bottom: 20px; display: flex; gap: 10px; align-items: flex-end;">
+        <div style="flex: 1;">
+            <label for="q" style="font-weight: bold; font-size: 0.9em;">Filtrar Categorias no Gráfico:</label>
+            <input type="text" name="q" id="q" value="{{ busca_categoria }}" class="form-control" style="margin-bottom: 0;" placeholder="Ex: Eletrônicos, Informática...">
+        </div>
+        
+        <div>
+            <button type="submit" class="btn" style="margin-bottom: 0;">📊 Atualizar Gráfico</button>
+
+            <a href="{% url 'grafico_estoque_categoria' %}" class="btn btn-secondary" style="margin-bottom: 0;">Limpar </a>
+        </div>
+    </form>
+
+    <div style="background-color: var(--branco); padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        <canvas id="meuGrafico" height="100"></canvas>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+
+        const labels = {{ labels|safe }};
+        const data = {{ data|safe }};
+        const ctx = document.getElementById('meuGrafico').getContext('2d');
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Valor Total em Estoque (R$)',
+                    data: data,
+                    backgroundColor: 'rgba(57, 73, 171, 0.7)',
+                    borderColor: 'rgba(26, 35, 126, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Valor Financeiro (R$)',
+                            font: { weight: 'bold' }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                    },
+                }
+            }
+        });
+    </script>
+{% endblock %}

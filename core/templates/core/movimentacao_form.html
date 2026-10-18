@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Registrar Movimentação de Estoque</h2>
+
+<div style="background-color: #e2e3e5; padding: 15px; border-left: 5px solid #6c757d; margin-bottom: 20px;">
+    <p style="margin: 0;">Produto selecionado: <strong>{{ produto.nome }}</strong></p>
+    <p style="margin: 5px 0 0 0;">Estoque atual do sistema: <strong>{{ produto.quantidade_estoque }} unidades</strong>
+    </p>
+</div>
+
+<p><small><em>Nota: Após salvar, o saldo final será recalculado automaticamente pela regra de negócio do banco de dados
+            (MySQL Trigger).</em></small></p>
+
+<form method="post" style="max-width: 500px; margin-top: 20px;">
+    {% csrf_token %}
+
+    <label for="tipo">Tipo de Movimentação:</label>
+    <select name="tipo" id="tipo" class="form-control" required>
+        <option value="E">Entrada (Adicionar unidades)</option>
+        <option value="S">Saída (Subtrair unidades)</option>
+    </select>
+
+    <label for="quantidade">Quantidade a movimentar:</label>
+    <input type="number" name="quantidade" id="quantidade" class="form-control" min="1" placeholder="Ex: 10" required>
+
+    <div style="margin-top: 20px;">
+        <button type="submit" class="btn">Confirmar Movimentação</button>
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>
+
+{% endblock %}

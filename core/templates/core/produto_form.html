@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h2>{{ acao }} Produto</h2>
+
+    <form method="post" style="max-width: 600px; margin-top: 20px;">
+        {% csrf_token %}
+        
+        <label for="{{ form.categoria.id_for_label }}">Categoria:</label>
+        {{ form.categoria }}
+
+        <label for="{{ form.nome.id_for_label }}">Nome do Produto:</label>
+        {{ form.nome }}
+
+        <label for="{{ form.preco.id_for_label }}">Preço (R$):</label>
+        {{ form.preco }}
+
+        <label for="{{ form.quantidade_estoque.id_for_label }}">Quantidade em Estoque:</label>
+        {{ form.quantidade_estoque }}
+
+        <div style="margin-top: 20px;">
+            <button type="submit" class="btn">Salvar Produto</button>
+            <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+{% endblock %}

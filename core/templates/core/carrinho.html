@@ -1,0 +1,53 @@
+{% extends 'base.html' %} 
+
+{% block content %} 
+<div class="container"> 
+    <h2>Meu Carrinho de Compras</h2> 
+
+    {% if messages %} 
+        {% for message in messages %} 
+            <div style="padding: 10px; margin-bottom: 15px; border-radius: 4px; background-color: {% if message.tags == 'error' %}#f8d7da{% else %}#d4edda{% endif %}; color: {% if message.tags == 'error' %}#721c24{% else %}#155724{% endif %};"> 
+                {{ message }} 
+            </div> 
+        {% endfor %} 
+    {% endif %} 
+
+    {% if itens %} 
+        <table> 
+            <thead> 
+                <tr> 
+                    <th>Produto</th> 
+                    <th>Preço Unitário</th> 
+                    <th>Qtd</th> 
+                    <th>Subtotal</th> 
+                    <th>Ações</th> 
+                </tr> 
+            </thead> 
+            <tbody> 
+                {% for item in itens %} 
+                <tr> 
+                    <td>{{ item.produto.nome }}</td> 
+                    <td>R$ {{ item.produto.preco|floatformat:2 }}</td> 
+                    <td>{{ item.quantidade }}</td> 
+                    <td>R$ {{ item.subtotal|floatformat:2 }}</td> 
+                    <td class="acoes"> 
+                        <a href="{% url 'remover_do_carrinho' item.id %}" class="delete">Remover</a> 
+                    </td> 
+                </tr> 
+                {% endfor %} 
+            </tbody> 
+        </table> 
+
+        <div style="margin-top: 30px; text-align: right;"> 
+            <h3 style="margin-bottom: 20px;">Total da Compra: R$ {{ total|floatformat:2 }}</h3> 
+            <a href="{% url 'loja' %}" class="btn btn-secondary" style="margin-right: 10px;">Continuar Comprando</a> 
+            <a href="{% url 'finalizar_compra' %}" class="btn">Finalizar Compra</a> 
+        </div> 
+
+    {% else %} 
+        <p>Seu carrinho está vazio.</p> 
+        <br> 
+        <a href="{% url 'loja' %}" class="btn">Voltar para a Loja</a> 
+    {% endif %} 
+</div> 
+{% endblock %}

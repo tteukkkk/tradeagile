@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+        <h2>Categorias Cadastradas</h2>
+        <div>
+            <a href="{% url 'categoria_cadastrar' %}" class="btn">+ Nova Categoria</a>
+        </div>
+    </div>
+
+    <form method="get" style="background-color: #e9ecef; padding: 15px; border-radius: 5px; margin: 20px 0; display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end;">
+        <div style="flex: 1; min-width: 220px;">
+            <label for="q" style="font-weight: bold; font-size: 0.9em;">Buscar por Nome:</label>
+            <input type="search" name="q" id="q" value="{{ busca }}" placeholder="Ex: Eletrônicos, Ferramentas, Acessórios, Games, Brinquedos, entre outros" class="form-control" style="margin-bottom: 0; width: 100%; padding: 8px;">
+        </div>
+        <div>
+            <button type="submit" class="btn" style="margin-bottom: 0;">🔍 Filtrar</button>
+            <a href="{% url 'categoria_listar' %}" class="btn btn-secondary" style="margin-bottom: 0;">Limpar</a>
+        </div>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome da Categoria</th>
+                <th>Descrição</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for categoria in categorias %}
+                <tr>
+                    <td>{{ categoria.id }}</td>
+                    <td>{{ categoria.nome }}</td>
+                    <td>{{ categoria.descricao }}</td>
+                    <td class="acoes">
+                        <a href="{% url 'categoria_editar' categoria.id %}" class="edit">Editar</a>
+                        <a href="{% url 'categoria_excluir' categoria.id %}" class="delete">Excluir</a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="4">Nenhuma categoria cadastrada.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

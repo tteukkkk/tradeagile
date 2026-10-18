@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center;">
+    <h2>Painel de Alerta: Baixo Estoque</h2>
+</div>
+
+<div style="background-color: #fff3cd; padding : 15px; border-left: 5px solid #ffeeba; margin-bottom: 20px;">
+    <strong>Aviso:</strong> Os produtos abaixo estão com 10 unidades ou menos. (Dados consultados pelo sistema).
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Produto</th>
+            <th>Categoria</th>
+            <th>Estoque Atual</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for alerta in alertas %}
+        <tr>
+            <td>{{ alerta.id }}</td>
+            <td>{{ alerta.produto }}</td>
+            <td>{{ alerta.categoria }}</td>
+            <td style="color: #dc3545; font-weight: bold;">{{ alerta.quantidade_estoque }}</td>
+            <td>
+                <a href="{% url 'registrar_movimentacao' alerta.produto_id %}" class="btn"
+                    style="padding: 5px 10px; font-size: 0.9em;">Repor Estoque</a>
+            </td>
+        </tr>
+        {% endfor %} 
+    </tbody> 
+</table> 
+
+{% endblock %}

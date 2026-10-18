@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+        <h2>Usuários do Sistema</h2>
+        <div>
+             <a href="{% url 'registro' %}" class="btn">+ Novo Usuário</a>
+        </div>
+    </div>
+
+    <form method="get" style="background-color: #e9ecef; padding: 15px; border-radius: 5px; margin: 20px 0; display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end;">
+        <div style="flex: 1; min-width: 220px;">
+            <label for="q" style="font-weight: bold; font-size: 0.9em;">Buscar por Nome:</label>
+            <input type="search" name="q" id="q" value="{{ busca }}" placeholder="Ex: devmys, email, luis ou Senai" class="form-control" style="margin-bottom: 0; width: 100%; padding: 8px;">
+        </div>
+        <div>
+            <button type="submit" class="btn" style="margin-bottom: 0;">🔍 Filtrar</button>
+            <a href="{% url 'usuario_listar' %}" class="btn btn-secondary" style="margin-bottom: 0;">Limpar</a>
+        </div>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Usuários</th>
+                <th>Data de Registro</th>
+                <th>Último Login</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for usuario in usuarios %}
+                <tr>
+                    <td>{{ usuario.id }}</td>
+                    <td>{{ usuario.username }}</td>
+                    <td>{{ usuario.date_joined|date:"d/m/Y" }}</td>
+                    <td>{{ usuario.last_login|date:"d/m/Y H:i"|default:"Nunca logou" }}</td>
+                    <td>
+                        {% if usuario.is_active %}
+                            <span style="color: green; font-weight: bold;">Ativo</span>
+                        {% else %}
+                            <span style="color: red; font-weight: bold;">Inativo</span>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="5">Nenhum usuário encontrado.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

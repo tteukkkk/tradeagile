@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Finalizar Compra</h2>
+
+    <!-- Mensagens do Sistema -->
+    {% if messages %}
+        {% for message in messages %}
+            <div style="padding: 10px; margin-bottom: 15px; border-radius: 4px; background-color: {% if message.tags == 'error' %}#f8d7da{% else %}#d4edda{% endif %}; color: {% if message.tags == 'error' %}#721c24{% else %}#155724{% endif %};">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div style="display: flex; gap: 30px; flex-wrap: wrap;">
+        <!-- Resumo do Pedido -->
+        <div style="flex: 1; min-width: 300px; border: 1px solid var(--cinza-borda); border-radius: 8px; padding: 20px;">
+            <h3 style="margin-top: 0; color: var(--azul-principal);">Resumo do Pedido</h3>
+            
+            <ul style="list-style-type: none; padding: 0;">
+                {% for item in itens %}
+                    <li style="border-bottom: 1px dashed var(--cinza-borda); padding: 10px 0; display: flex; justify-content: space-between;">
+                        <span>{{ item.quantidade }}x {{ item.produto.nome }}</span>
+                        <strong>R$ {{ item.subtotal|floatformat:2 }}</strong>
+                    </li>
+                {% endfor %}
+            </ul>
+
+            <div style="display: flex; justify-content: space-between; font-size: 1.2em; margin-top: 20px;">
+                <strong>Total a pagar:</strong>
+                <strong style="color: var(--laranja-destaque);">R$ {{ total|floatformat:2 }}</strong>
+            </div>
+        </div>
+
+        <!-- Formulário de Pagamento -->
+        <div style="flex: 1; min-width: 300px; border: 1px solid var(--cinza-borda); border-radius: 8px; padding: 20px; background-color: #fcfcfc;">
+            <h3 style="margin-top: 0; color: var(--azul-principal);">Pagamento</h3>
+            
+            <form method="post">
+                {% csrf_token %}
+                <p style="font-weight: bold; margin-bottom: 10px;">Forma de Pagamento:</p>
+                
+                <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 10px; border: 1px solid #ddd; border-radius: 4px; background-color: white;">
+                        <input type="radio" name="forma_pagamento" value="PIX" required checked>
+                        <span>💠 PIX</span>
+                    </label>
+                    
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 10px; border: 1px solid #ddd; border-radius: 4px; background-color: white;">
+                        <input type="radio" name="forma_pagamento" value="CREDITO" required>
+                        <span>💳 Cartão de Crédito</span>
+                    </label>
+                    
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 10px; border: 1px solid #ddd; border-radius: 4px; background-color: white;">
+                        <input type="radio" name="forma_pagamento" value="BOLETO" required>
+                        <span>📄 Boleto Bancário</span>
+                    </label>
+                </div>
+
+                <label for="valor_pago" style="font-weight: bold; display: block; margin-bottom: 5px;">Confirme o valor do pagamento (R$):</label>
+                <input type="text" name="valor_pago" id="valor_pago" class="form-control" placeholder="Ex: {{ total|floatformat:2|safe }}" required>
+                <small style="color: #666; display: block; margin-top: 5px; margin-bottom: 20px;">O valor informado deve ser exato ao total da compra.</small>
+
+                <button type="submit" class="btn" style="width: 100%; font-size: 1.1em; padding: 12px;">✅ Confirmar Pagamento</button>
+                <a href="{% url 'ver_carrinho' %}" style="display: block; text-align: center; margin-top: 15px; color: #666; text-decoration: none;">Voltar ao carrinho</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang='pt-br'>
+<head>
+    <meta charset='utf-8'>
+    <title>TRADEAGILE - Controle de Estoque</title>
+    <link rel='stylesheet' href='{% static "style.css" %}'>
+</head>
+<body>
+    <header>
+        <h2>TRADEAGILE</h2>
+        <nav>
+            {% if user.is_authenticated %}
+            <span>Olá, {{ user.username }}</span>
+            <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit"
+                    style="background: none; border: none; color: white; cursor: pointer;">Sair</button>
+            </form>
+            {% else %}
+            <a href="{% url 'login' %}">Entrar</a>
+            <a href="{% url 'registro' %}">Cadastrar</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <div class="wrapper">
+        {% if user.is_authenticated %}
+        <aside class="sidebar">
+            <ul>
+                <li><a href="{% url 'dashboard' %}">Listar Produtos</a></li>
+                <li><a href="{% url 'categoria_listar' %}">Listar Categorias</a></li>
+                <li><a href="{% url 'usuario_listar' %}">Listar Usuários</a></li>
+                
+                <hr style="border: 0; border-top: 1px solid var(--cinza-borda); margin: 15px 0;">
+                
+                <!-- Novos links abaixo -->
+                <li><a href="{% url 'painel_alertas' %}" style="color: #dc3545;">⚠ Alertas de Estoque</a></li>
+                <li><a href="{% url 'reajuste_precos' %}">💲 Reajuste em Massa</a></li>
+                <li><a href="{% url 'produtos_esgotados' %}" style="color: #dc3545;">📉 Relatório de Esgotados</a></li>
+                <li><a href="{% url 'importar_produtos' %}" style="color: #28a745;">📥 Importar Produtos</a></li>
+                <li><a href="{% url 'importar_categorias' %}">📥 Importar Categorias</a></li>
+                <li><a href="{% url 'relatorio_valor_estoque' %}" style="color: var(--azul-principal);">💰 Valor Patrimonial</a></li>
+                <li><a href="{% url 'grafico_estoque_categoria' %}" style="color: var(--laranja-destaque);">📈 Gráfico de Categorias</a></li>
+                
+                <!-- Seção do E-commerce -->
+                <li><a href="{% url 'loja' %}">🛒 Loja Virtual</a></li>
+                <li><a href="{% url 'ver_carrinho' %}">🛒 Meu Carrinho</a></li>
+                <li><a href="{% url 'meus_pedidos' %}">📦 Meus Pedidos</a></li>
+            </ul>
+        </aside>
+        {% endif %}
+
+        <main class="main-content">
+            <div class="content">
+                {% block content %} {% endblock %}
+            </div>
+        </main>
+    </div>
+</body>
+</html>

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="container">
+        <div class="page-header">
+            <h2>Promoção Black Friday</h2>
+        </div>
+
+        <div style="background-color: rgb(178, 178, 255); padding : 15px; border-left: 5px solid rgb(41, 41, 192); margin-bottom: 20px;">
+            <strong>Atenção Gerente:</strong> Ao confirmar, o sistema aplicará um desconto automático de 10% em TODOS os produtos da categoria selecionada. Esta ação é executada diretamente no Banco de Dados.
+        </div>
+
+        <form method="post" style="max-width: 600px; margin-top: 20px;" class="form-card">
+            {% csrf_token %}
+            <br>
+            <label for="categoria_id"><strong>Selecione a Categoria para o Desconto:</strong></label>
+            <select name="categoria_id" id="categoria_id" class="form-control" required>
+                <option value="">-- Escolha uma categoria --</option>
+                {% for categoria in categorias %}
+                <option value="{{ categoria.id }}">{{ categoria.nome }}</option>
+                {% endfor %}
+            </select>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-success">Ativar Black Friday</button>
+                <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+{% endblock %}

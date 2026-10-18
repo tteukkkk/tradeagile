@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2>Reajuste de Preços em Massa</h2>
+    <p>Utilize esta ferramenta para aplicar um percentual de aumento ou desconto em todos os produtos de uma mesma
+    categoria. (Processado em lote via MySQL Stored Procedure).</p>
+
+    <form method="post" style="max-width: 500px; margin-top: 20px;">
+        {% csrf_token %}
+
+    <label for="categoria_id">Selecione a Categoria:</label>
+    <select name="categoria_id" id="categoria_id" class="form-control" required>
+        <option value="">-- Escolha uma categoria --</option>
+        {% for categoria in categorias %}
+        <option value="{{ categoria.id }}">{{ categoria.nome }}</option>
+        {% endfor %}
+    </select>
+    
+    <label for="percentual">Percentual de Reajuste (%):</label>
+    <input type="number" step="0.01" name="percentual" id="percentual" class="form-control" placeholder="Ex: 5.00 para aumentar 5% ou -5.00
+para desconto" required>
+    <div style="margin-top: 20px;">
+        <button type="submit" class="btn">Aplicar Reajuste no Banco</button>
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>
+{% endblock %}

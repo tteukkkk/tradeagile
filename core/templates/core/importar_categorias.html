@@ -1,0 +1,31 @@
+{% extends 'base.html' %} 
+
+{% block content %} 
+    <h2>Importar Categoria</h2> 
+
+    {% if messages %} 
+        {% for message in messages %} 
+            <div style="padding: 10px; margin-bottom: 15px; border-radius: 4px; 
+                        {% if message.tags == 'error' %}background-color: #f8d7da; color: #721c24; 
+                        {% else %}background-color: #d4edda; color: #155724;{% endif %}"> 
+                {{ message }} 
+            </div> 
+        {% endfor %} 
+    {% endif %} 
+
+    <div style="background-color: #e2e3e5; padding: 15px; border-left: 5px solid var(--azul-principal); margin-bottom: 20px;"> 
+        <p><strong>Instruções:</strong> Mande algum envio em: <code>.csv</code>, <code>nome</code> e <code>descricao</code></p> 
+        <p>O campo <code>nome</code> é obrigatório. Categorias com nomes repetidos serão atualizadas.</p> 
+    </div> 
+
+    <form method="POST" enctype="multipart/form-data" style="max-width: 500px;"> 
+        {% csrf_token %} 
+        <label for="arquivo" style="font-weight: bold;">Selecione o Arquivo:</label> 
+        <input type="file" name="arquivo" id="arquivo" class="form-control" accept=".csv" required> 
+        
+        <div style="margin-top: 20px;"> 
+            <button type="submit" class="btn">Importar Categorias</button> 
+            <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancelar</a> 
+        </div> 
+    </form>
+{% endblock %}

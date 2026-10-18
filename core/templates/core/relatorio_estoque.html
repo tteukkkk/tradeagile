@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h2>Relatório de Valor Patrimonial</h2>
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary">Voltar ao Dashboard</a>
+    </div>
+
+    <div style="background-color: var(--branco); border-left: 6px solid var(--laranja-destaque); padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); border-radius: 4px;
+        margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h3 style="margin: 0; color: var(--azul-principal); font-size: 1.1em; text-transform: uppercase; letter-spacing: 0.5px;">Total do Capital Investido em Estoque</h3>
+            <p style="margin: 5px 0 0; font-size: 0.9em; color: #666;">Soma das Colunas calculadas de todos os produtos</p>
+        </div>
+        <div style="font-size: 2em; font-weight: bold; color: var(--azul-principal);">
+            R$ {{ total_geral|floatformat:2 }}
+        </div>
+    </div>
+
+    <h3 style="color: var(--azul-principal); border-bottom: 2px solid var(--azul-principal); padding-bottom: 5px;">Análise Patrimonial por Item</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Produto</th>
+                <th>Preço Unitário</th>
+                <th>Qtd. em Estoque</th>
+                <th style="background-color: var(--laranja-destaque);">Valor em Estoque (Property)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for produto in produtos %}
+                <tr>
+                    <td style="font-weight: bold;">{{ produto.nome }}</td>
+                    <td>R$ {{ produto.preco|floatformat:2 }}</td>
+                    <td>{{ produto.quantidade_estoque }}</td>
+                    <td style="font-weight: bold; color: var(--azul-principal);">R$ {{ produto.valor_total_estoque|floatformat:2 }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="4">Nenhum produto em estoque.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div style="margin-top: 40px;"></div>
+
+    <h3 style="color: var(--azul-principal); border-bottom: 2px solid var(--azul-principal); padding-bottom: 5px;">Últimas Movimentações e Impacto Financeiro</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Data/Hora</th>
+                <th>Produto</th>
+                <th>Tipo</th>
+                <th>Qtd.</th>
+                <th>Valor Unitário</th>
+                <th style="background-color: var(--laranja-destaque);">Fluxo Financeiro (Property)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for mov in movimentacoes %}
+            <tr>
+                <td>{{ mov.data|date:"d/m/Y H:i" }}</td>
+                <td>{{ mov.produto.nome }}</td>
+                <td>
+                    {% if mov.tipo == 'E' %}
+                        <span style="color: green; font-weight: bold;">➕ Entrada</span>
+                    {% else %}
+                        <span style="color: red; font-weight: bold;">➖ Saída</span>
+                    {% endif %}
+                </td>
+                <td>{{ mov.quantidade }}</td>
+                <td style="font-weight: bold; color: {% if mov.tipo == 'E' %}green{% else %}red{% endif %};">R$ {{ mov.produto.preco|floatformat:2 }}</td>
+                <td style="font-weight: bold; color: {% if mov.tipo == 'E' %}green{% else %}red{% endif %};">R$ {{ mov.valor_financeiro_movimentacao|floatformat:2 }}</td>
+            </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="5">Nenhuma movimentação registrada recentemente.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

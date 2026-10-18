@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h2>Visão Geral do Estoque</h2>
+        {% if messages %}
+        {% for message in messages %}
+            <div style="padding: 10px; margin-bottom: 15px; background-color: #d4edda; color: #155724; border-left: 5px solid #28a745;">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+        <a href="{% url 'produto_cadastrar' %}" class="btn"> + Novo Produto</a>
+    
+    </div>
+    <form method="GET" style="background-color: #e9ecef; padding: 15px; border-radius: 5px; margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end;">
+
+        <input type="hidden" name="sort" value="{{ ordenacao }}">
+
+        <div style="flex: 1; min-width: 200px;">
+            <label for="q" style="font-weight: bold; font-size: 0.9em;">Buscar por Nome:</label>
+            <input type="text" name="q" id="q" value="{{ busca_nome }}" class="form-control" style="margin-bottom: 0;" placeholder="Ex: Mouse, Monitor...">
+        </div>
+
+        <div style="flex: 1; min-width: 150px;">
+            <label for="categoria" style="font-weight: bold; font-size: 0.9em;">Categoria:</label>
+
+            <select name="categoria" id="categoria" class="form-control" style="margin-bottom: 0;">
+
+                <option value="">-- Todas --</option>
+                {% for cat in categorias %}
+                    <option value="{{ cat.id }}" {% if busca_categoria == cat.id|stringformat:"s" %}selected{% endif %}>{{ cat.nome}}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div style="flex: 1; min-width: 130px;">
+            <label for="data_inicio" style="font-weight: bold; font-size: 0.9em;">Data Inicial:</label>
+
+            <input type="date" name="data_inicio" id="data_inicio" value="{{ data_inicio }}" class="form-control" style="margin-bottom: 0;">
+        </div>
+
+        <div style="flex: 1; min-width: 130px;">
+            <label for="data_fim" style="font-weight: bold; font-size: 0.9em;">Data Final:</label>
+
+            <input type="date" name="data_fim" id="data_fim" value="{{ data_fim }}" class="form-control" style="margin-bottom: 0;">
+        </div>
+
+        <div>
+            <button type="submit" class="btn" style="margin-bottom: 0;">🔍 Filtrar</button>
+            <a href="{% url 'dashboard' %}" class="btn btn-secondary" style="margin-bottom: 0;">Limpar</a>
+        </div>
+
+    </form>
+
+    <table>
+        <table>
+        <thead>
+            <tr>
+               {% with url_base="?q="|add:busca_nome|add:"&categoria="|add:busca_categoria|add:"&data_inicio="|add:data_inicio|add:"&data_fim="|add:data_fim %}
+
+               <th>
+                  <a href="{{ url_base }}&sort={% if ordenacao == 'nome' %}-nome{% else %}nome{% endif %}" style="color: white; text-decoration: none;">Produto {% if ordenacao == 'nome' %}⬆️{% elif ordenacao == '-nome' %}⬇️{% else %}↕️{% endif %}
+                  </a>
+                </th>
+                <th>Categoria</th>
+                <th>
+                    <a href="{{ url_base }}&sort={% if ordenacao == 'preco' %}-preco{% else %}preco{% endif %}" style="color: white; text-decoration: none;">Preço {% if ordenacao == 'preco' %}⬆️{% elif ordenacao == '-preco' %}⬇️{% else %}↕️{% endif %}
+                  </a>
+                </th>
+                <th>
+                    <a href="{{ url_base }}&sort={% if ordenacao == 'quantidade_estoque' %}-quantidade_estoque{% else %}quantidade_estoque{% endif %}" style="color: white; text-decoration: none;">Estoque {% if ordenacao == 'quantidade_estoque' %}⬆️{% elif ordenacao == '-quantidade_estoque' %}⬇️{% else %}↕️{% endif %}
+                  </a>
+                </th>
+                <th>
+                    <a href="{{ url_base }}&sort={% if ordenacao == 'data_insercao' %}-data_insercao{% else %}data_insercao{% endif %}" style="color: white; text-decoration: none;">Data Cadastro {% if ordenacao == 'data_insercao' %}⬆️{% elif ordenacao == '-data_insercao' %}⬇️{% else %}↕️{% endif %}
+                  </a>
+                </th>
+                <th>Ações</th>
+
+                {% endwith %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for produto in produtos %}
+                <tr>
+                    <td>{{ produto.nome }}</td>
+                    <td>{{ produto.categoria.nome }}</td>
+                    <td>R$ {{ produto.preco }}</td>
+                    <td>{{ produto.quantidade_estoque }}</td>
+                    <td>{{ produto.data_insercao|date:"d/m/Y H:i" }}</td>
+                    <td class="acoes">
+                        <a href="{% url 'produto_editar' produto.id %}" class="edit">Editar</a>
+                        <a href="{% url 'produto_excluir' produto.id %}" class="delete">Excluir</a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="5">Nenhum produto cadastrado.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
